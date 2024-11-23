@@ -1,7 +1,6 @@
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -83,27 +82,25 @@ public class EquationSolverGame {
                     continue;
             }
 
-            try (Scanner fileScanner = new Scanner(new File(filePath))) {
-                EqnSolver solver = new EqnSolver();
+            Scanner fileScanner = new Scanner(new File(filePath));
+            EqnSolver solver = new EqnSolver();
 
-                while (fileScanner.hasNextLine()) {
-                    String equation = fileScanner.nextLine();
-                    System.out.println("Solve: " + equation.substring(0, equation.length() - 2));
+            while (fileScanner.hasNextLine()) {
+                String equation = fileScanner.nextLine();
+                System.out.println("Solve: " + equation.substring(0, equation.length() - 2));
 
-                    int correctAnswer = solver.computeResult(equation);
-                    int userAnswer = scanner.nextInt();
+                int correctAnswer = solver.computeResult(equation);
+                int userAnswer = scanner.nextInt();
 
-                    if (userAnswer == correctAnswer) {
-                        score += solver.score;
-                        System.out.println("Correct!");
-                    } else {
-                        System.out.println("Incorrect! Correct answer: " + correctAnswer);
-                    }
+                if (userAnswer == correctAnswer) {
+                    score += solver.score;
+                    System.out.println("Correct!");
+                } else {
+                    System.out.println("Incorrect! Correct answer: " + correctAnswer);
                 }
-            } catch (IOException e) {
-                System.out.println("Error: Unable to read the file.");
-                e.printStackTrace();
             }
+
+            fileScanner.close();
 
             System.out.println(playerName + ", your score is: " + score + "/" + (difficulty * 10));
             saveScore(playerName, score, difficulty);
@@ -131,12 +128,9 @@ public class EquationSolverGame {
         String formattedTime = currentTime.format(timeFormatter);
 
         String filePath = "D:\\2nd Year 1st Semester\\OOP(ICT-2107) [Zia Sir]\\CODE\\ok/History.txt";
-        try (FileWriter writer = new FileWriter(filePath, true)) {
-            writer.write(playerName + "    " + score + "    " + currentDate + "    " + formattedTime + "    " + difficultyLevel + "\n");
-            System.out.println("Score saved successfully!");
-        } catch (IOException e) {
-            System.out.println("Error: Unable to save the score.");
-            e.printStackTrace();
-        }
+        FileWriter writer = new FileWriter(filePath, true);
+        writer.write(playerName + "    " + score + "    " + currentDate + "    " + formattedTime + "    " + difficultyLevel + "\n");
+        writer.close();
+        System.out.println("Score saved successfully!");
     }
 }
